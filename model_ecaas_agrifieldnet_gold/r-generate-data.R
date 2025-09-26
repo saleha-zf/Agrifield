@@ -11,429 +11,183 @@ library(RStoolbox)
 library(jsonlite)
 library(data.table)
 library(spdep)
-library(FIELDimageR) ## please install via github devtools::install_github("OpenDroneMap/FIELDimageR")
+library(FIELDimageR)
 
-####
-output_path = Sys.getenv('OUTPUT_DATA')
+cat("=== STARTING TEST DATA GENERATION ===\n")
 
-#####
-path.dir = Sys.getenv('INPUT_DATA')
-data.dir = paste0(path.dir,"/ref_agrifieldnet_competition_v1")
+# Paths
+output_path <- Sys.getenv('OUTPUT_DATA')
+path.dir <- Sys.getenv('INPUT_DATA')
+data.dir <- file.path(path.dir, "ref_agrifieldnet_competition_v1")
+test_path <- "ref_agrifieldnet_competition_v1_labels_test"
+image_path <- "ref_agrifieldnet_competition_v1_source"
 
-######
-##label_path = "ref_agrifieldnet_competition_v1_labels_train"
-test_path = "ref_agrifieldnet_competition_v1_labels_test"
-image_path = "ref_agrifieldnet_competition_v1_source"
-
-### help functions
-map.func = function(x, y =7){
-  map = x %>% 
-    sapply(FUN = function(x){strsplit(x, '[,.:_/"]')[[1]][y]}) %>% 
-    sub("[[:punct:]]", '',.) %>% 
-    sub("'",'',.)
+# Helper function to extract IDs from URLs
+map.func <- function(x, y = 7){
+  map <- x %>%
+    sapply(FUN = function(x){strsplit(x, '[,.:_/"]')[[1]][y]}) %>%
+    sub("[[:punct:]]", '', .) %>%
+    sub("'", '', .)
   return(map)
 }
 
-
-### Get the train label json file
-#colls =  paste0(data.dir,"/ref_agrifieldnet_competition_v1_labels_train/collection.json")
-
-
-
-# # Train collection JSON
-# colls_path = paste0(data.dir,"/ref_agrifieldnet_competition_v1_labels_train/collection.json")
-# cat("Reading train collection JSON from:\n", colls_path, "\n")
-# colls = jsonlite::read_json(colls_path)
-
-
-# qq = colls$links[3:length(colls$links)]
-# ids = c()
-# field_path = c()
-# labels_path = c()
-# for(i in 1:length(qq)){
-#   id = map.func(qq[[i]]$href) %>% as.character()
-#   id_path = paste0(data.dir,"/",label_path,"/",label_path,"_",id,"/field_ids.tif")
-#   path = paste0(data.dir,"/",label_path,"/",label_path,"_",id,"/raster_labels.tif")
-#   ids = c(ids,id)
-#   field_path = c(field_path,id_path)
-#   labels_path = c(labels_path,path)
-# }
-
-# train_path = data.frame(ids = ids, field_path = field_path,labels_path = labels_path) %>% 
-#   filter(ids != "windows")
-
-
-
-# #################################################
-# ####  GETTING TRAIN DATA 7 HOURS
-# #### EXREACT BANDS INFO FROM IMAGES 
-# #################################################
-# df = data.frame()
-# for(i in 1:nrow(train_path)){
-#   f_mat = raster(train_path[i,2]) %>% as.matrix()
-#   f_mat_rs = which(rowSums(f_mat,na.rm = T)>0)
-#   f_mat_cs = which(colSums(f_mat,na.rm = T)>0)
-#   f_mat = as.matrix(f_mat[f_mat_rs,f_mat_cs])
-#   lab_mat = raster(train_path[i,3]) %>% as.matrix()
-#   lab_mat = as.matrix(lab_mat[f_mat_rs,f_mat_cs])
-  
-
-#     bands = c(paste0("B0",1:9),"B11","B12")
-
-#   train_data = data.frame(id= 1)
-#   for(b in bands){
-#     img = paste0(data.dir,"/",image_path,"/",image_path,"_",train_path[i,1],"/",b,".tif")
-#     mm = raster(img) %>% as.matrix()
-#     mm = as.matrix(mm[f_mat_rs,f_mat_cs])
-    
-    
-#     bb = c()
-#     for(x in 1:nrow(mm)){
-#       for(y in 1:ncol(mm)){
-#         id = mm[x,y]
-#         bb = c(bb,id)
-        
-#       }
-#     }
-#     bb = data.frame(bb)
-#     train_data = bind_cols(train_data,bb)
-#   }
-#   colnames(train_data) = c("id",bands)
-  
-  
-#   #### extract field and label
-#   fid = c()
-#   label = c()
-#   for(x in 1:nrow(lab_mat)){
-#     for(y in 1:ncol(lab_mat)){
-#       id = f_mat[x,y]
-#       lab= lab_mat[x,y]
-#       fid = c(fid,id)
-#       label = c(label,lab)
-#     }
-#   }
-
-  
-#   dd = data.frame(folder = train_path[i,1],fid = fid,label = label,train_data) %>% filter(!is.na(label))  
-#   df = rbind(df,dd)
-#   rm(f_mat,lab_mat,fid,label,mm,bb,train_data);invisible(gc())
-# }
-
-# ####################
-# ngb = data.frame()
-# for(i in 1:nrow(train_path)){
-#   cat("train_data_pca",i,"\n")
-#   f_mat = raster(train_path[i,2]) 
-#   f_mat = rasterToPoints(f_mat,spatial = T)
-#   llprj <-  "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-#   llpts <- spTransform(f_mat, CRS(llprj))
-#   f_mat = as.data.frame(llpts)
-  
-#   f_mat = f_mat %>% group_by(field_ids) %>% summarise_all(list(mean = mean)) %>% ungroup()
-  
-#   ngb = rbind(ngb,f_mat)
-#   rm(f_mat);invisible(gc())
-# }
-
-# ####################
-# field_details = data.frame()
-# for(i in 1:nrow(train_path)){
-#   cat("train_data",i,"\n")
-  
-# #  stac = jsonlite::read_json(paste0(data.dir,"/",label_path,"/",label_path,"_",train_path[i,1],"/stac.json"))
-#  # Per-train field stac.json
-#    stac_path = paste0(data.dir,"/",label_path,"/",label_path,"_",train_path[i,1],"/stac.json")
-#    cat("Reading train stac.json from:\n", stac_path, "\n")
-#    stac = jsonlite::read_json(stac_path)
-
- 
-#   bbox = unlist(stac$bbox)
-  
-#   # Update tile coordinates
-#   tile_width = bbox [3] - bbox[1]
-#   tile_height = bbox [4] - bbox[2]
-  
-#   dd = data.frame(folder = train_path[i,1],tile_width = tile_width,tile_height=tile_height)
-#   field_details = rbind(field_details,dd)
-# }
-
-
-# ###################################################
-# ####### GET TRAIN VEGETATION INDICIES AREA
-# ###################################################
-# train_area_data = data.frame()
-# for(i in 1:nrow(train_path)){
-  
-#   img  = c(paste0(data.dir,"/",image_path,"/",image_path,"_",train_path[i,1], "/B02.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",train_path[i,1],"/B03.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",train_path[i,1],"/B04.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",train_path[i,1],"/B08.tif"))
-#   mm2 = raster::stack(img)
-#   veg = c("EVI","SI","GLI","HUE","NDVI","GNDVI")
-#   area = c()
-#   for(j in 1:length(veg)){
-#     RemSoil <- FIELDimageR::fieldMask(mosaic = mm2, Red = 3, Green = 2, Blue = 1,NIR = 4, index = veg[j],
-#                                       plot = F,cropAbove = T)
-#     EX1.Canopy<-FIELDimageR::fieldArea(mosaic = RemSoil$mask,n.core = 16, plot = F)
-#     area = c(area,EX1.Canopy$areaPorcent$objArea)
-#   }
-#   pp = matrix(area,nrow = 1,ncol = length(veg))
-#   pp = cbind(folder = train_path[i,1],pp)
-#   train_area_data = rbind(train_area_data,pp)
-# }
-# colnames(train_area_data) = c("folder",paste0("Area_",veg))
-
-# for(i in 2:ncol(train_area_data)){
-#   train_area_data[,i] = as.numeric(train_area_data[,i])
-# }
- 
-# field_details = field_details %>% left_join(train_area_data) %>% left_join(df %>% dplyr::select(folder,fid))
-
-
-
-
-
-##########################################
-### GETTING TEST DATASET 4 HOURS
-##########################################
-### Get the test label json file
-#colls =  paste0(data.dir,"/",test_path,"/",test_path,"/collection.json")
-#colls = jsonlite::read_json(colls)
-
-#NEW
-# Test collection JSON
-test_coll_path = paste0(data.dir,"/",test_path,"/",test_path,"/collection.json")
+####### Load Test Collection JSON
+test_coll_path <- file.path(data.dir, test_path, "collection.json")
 cat("Reading test collection JSON from:\n", test_coll_path, "\n")
-colls = jsonlite::read_json(test_coll_path)
+if(!file.exists(test_coll_path)) stop("ERROR: Test collection JSON not found!")
 
+colls <- jsonlite::read_json(test_coll_path)
+qq <- colls$links[3:(length(colls$links)-1)]
+cat("Number of test links:", length(qq), "\n")
 
-
-qq = colls$links[3:length(colls$links)-1]
-ids = c()
-field_path = c()
-labels_path = c()
+# Map each field to its actual numbered folder (_0000, _0001, ...)
+ids <- c()
+field_path <- c()
 for(i in 1:length(qq)){
-  id = map.func(qq[[i]]$href) %>% as.character()
-  id_path = paste0(data.dir,"/",test_path,"/",test_path,"/",test_path,"_",id,"/field_ids.tif")
-  ids = c(ids,id)
-  field_path = c(field_path,id_path)
+  id <- sprintf("%04d", i-1)  # zero-padded folder index
+  folder_name <- paste0(test_path, "_", id)
+  tif_path <- file.path(data.dir, test_path, folder_name, "field_ids.tif")
+  ids <- c(ids, id)
+  field_path <- c(field_path, tif_path)
 }
+test_fields <- data.frame(ids = ids, field_path = field_path, stringsAsFactors = FALSE)
+cat("Number of test fields parsed:", nrow(test_fields), "\n")
+if(nrow(test_fields) == 0) stop("No test fields found! Check JSON paths.")
 
-test_fields = data.frame(ids = ids, field_path = field_path) %>% filter(!is.na(ids))
+##########################################
+#### GENERATE RAW TEST DATA
+##########################################
 
+# test <- data.frame()
 
-test = data.frame()
-for(i in 1:nrow(test_fields)){
-  cat("test_band_data",i,"\n")
-  f_mat = raster(test_fields[i,2]) %>% as.matrix()
-  f_mat_rs = which(rowSums(f_mat,na.rm = T)>0)
-  f_mat_cs = which(colSums(f_mat,na.rm = T)>0)
-  f_mat = as.matrix(f_mat[f_mat_rs,f_mat_cs])
-
-  #### extract bands
-  bands = c(paste0("B0",1:9),"B11","B12")
-  train_data = data.frame(id= 1)
-  for(b in bands){
-    img = paste0(data.dir,"/",image_path,"/",image_path,"_",test_fields[i,1],"/",b,".tif")
-    mm = raster(img) %>% as.matrix()
-    mm = as.matrix(mm[f_mat_rs,f_mat_cs])
-
-
-    bb = c()
-    for(x in 1:nrow(mm)){
-      for(y in 1:ncol(mm)){
-        id = mm[x,y]
-        bb = c(bb,id)
-
-      }
-    }
-    bb = data.frame(bb)
-    train_data = bind_cols(train_data,bb)
-  }
-  colnames(train_data) = c("id",bands)
-
-  fid = c()
-  for(x in 1:nrow(f_mat)){
-    for(y in 1:ncol(f_mat)){
-      id = f_mat[x,y]
-      fid = c(fid,id)
-    }
-  }
+# # Updated bands matching actual filenames
+# bands <- c(
+#   B01 = "B01.B1.tif",
+#   B02 = "B02.B2.tif",
+#   B03 = "B03.B3.tif",
+#   B04 = "B04.B4.tif",
+#   B05 = "B05.B5.tif",
+#   B06 = "B06.B6.tif",
+#   B07 = "B07.B7.tif",
+#   B08 = "B08.B8.tif",
+#   B09 = "B09.B9.tif",
+#   B11 = "B11.B11.tif",
+#   B12 = "B12.B12.tif",
+#   B8A = "B8A.B8A.tif"
+# )
 
 
-  dd = data.frame(folder = test_fields[i,1],fid = fid,train_data) %>% filter(!is.na(fid))
-  test = rbind(test,dd)
-  rm(f_mat,fid,dd,bb,train_data,f_mat_cs,fmat_rs);invisible(gc())
-}
-
-
-test_ngb = data.frame()
-for(i in 1:nrow(test_fields)){
-  cat("test_data",i,"\n")
-  f_mat = raster(test_fields[i,2]) 
-  f_mat = rasterToPoints(f_mat,spatial = T)
-  llprj <-  "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-  llpts <- spTransform(f_mat, CRS(llprj))
-  f_mat = as.data.frame(llpts)
-  
-  f_mat = f_mat %>% group_by(field_ids) %>% summarise_all(list(mean = mean)) %>% ungroup()
-  uniq_field = unique(f_mat$field_ids)
-  
-  
-  test_ngb = rbind(test_ngb,f_mat)
-  rm(f_mat);invisible(gc())
-}
-
-
-####################
-test_details = data.frame()
-for(i in 1:nrow(test_fields)){
-  cat("test_data_tile",i,"\n")
-  
-#  img = jsonlite::read_json(paste0(data.dir,"/",test_path,"/",test_path,"/",test_path,"_",test_fields[i,1],"/stac.json"))
- # Per-test field stac.json
-test_stac_path = paste0(data.dir,"/",test_path,"/",test_path,"/",test_path,"_",test_fields[i,1],"/stac.json")
-cat("Reading test stac.json from:\n", test_stac_path, "\n")
-img = jsonlite::read_json(test_stac_path)
-
- 
-  bbox = unlist(img$bbox)
-  
-  # Update tile coordinates
-  tile_width = bbox [3] - bbox[1]
-  tile_height = bbox [4] - bbox[2]
-  
-
-  dd = data.frame(folder = test_fields[i,1],tile_width = tile_width,tile_height=tile_height)
-  test_details = rbind(test_details,dd)
-}
-
-
-# ###################################################
-# ####### GET TRAIN VEGETATION INDICIES AREA
-# ###################################################
-# test_area_data = data.frame()
 # for(i in 1:nrow(test_fields)){
-#   cat("test_area_data",i,"\n")
-#   img  = c(paste0(data.dir,"/",image_path,"/",image_path,"_",test_fields[i,1], "/B02.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",test_fields[i,1],"/B03.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",test_fields[i,1],"/B04.tif"),
-#            paste0(data.dir,"/",image_path,"/",image_path,"_",test_fields[i,1],"/B08.tif"))
-#   mm2 = raster::stack(img)
-#   veg = c("EVI","SI","GLI","HUE","NDVI","GNDVI")
-#   area = c()
-#   for(j in 1:length(veg)){
-#     RemSoil <- FIELDimageR::fieldMask(mosaic = mm2, Red = 3, Green = 2, Blue = 1,NIR = 4, index = veg[j],
-#                                       plot = F,cropAbove = T)
-#     EX1.Canopy<-FIELDimageR::fieldArea(mosaic = RemSoil$mask,n.core = 16, plot = F)
-#     area = c(area,EX1.Canopy$areaPorcent$objArea)
+#   cat("Processing test field:", i, "/", nrow(test_fields), "ID:", test_fields$ids[i], "\n")
+  
+#   # Load field raster
+#   if(!file.exists(test_fields$field_path[i])){
+#     cat("WARNING: Field raster does not exist:", test_fields$field_path[i], "\n")
+#     next
 #   }
-#   pp = matrix(area,nrow = 1,ncol = length(veg))
-#   pp = cbind(folder = test_fields[i,1],pp)
-#   test_area_data = rbind(test_area_data,pp)
+  
+#   f_mat <- raster(test_fields$field_path[i]) %>% as.matrix()
+#   f_mat_rs <- which(rowSums(f_mat, na.rm = TRUE) > 0)
+#   f_mat_cs <- which(colSums(f_mat, na.rm = TRUE) > 0)
+  
+#   if(length(f_mat_rs) == 0 | length(f_mat_cs) == 0){
+#     cat("WARNING: Empty field matrix for field", test_fields$ids[i], "\n")
+#     next
+#   }
+  
+#   f_mat <- f_mat[f_mat_rs, f_mat_cs]
+#   train_data <- data.frame()
 # }
-# colnames(test_area_data) = c("folder",paste0("Area_",veg))
-
-
-# for(i in 2:ncol(test_area_data)){
-#   test_area_data[,i] = as.numeric(test_area_data[,i])
+# for(b in names(bands)){
+#   img_file <- file.path(data.dir, image_path, paste0(image_path, "_", test_fields$ids[i]), bands[b])
+  
+#   if(!file.exists(img_file)){
+#     cat("WARNING: Band file missing:", img_file, "\n")
+#     train_data[[b]] <- NA  # fill missing band with NA
+#     next
+#   }
+  
+#   mm <- raster(img_file) %>% as.matrix()
+#   mm <- mm[f_mat_rs, f_mat_cs]
+  
+#   train_data[[b]] <- as.vector(mm)  # column name is exactly 'B01', 'B02', etc.
 # }
+#   cat("Rows in train_data for this field before filtering NAs:", nrow(train_data), "\n")
+#   # Initialize final test data frame
+test <- data.frame()
+bands <- c(paste0("B0", 1:9), "B11", "B12")  # Band names exactly as expected
 
-# test_details = test_details %>% 
-#   left_join(test_area_data) %>% 
-#   left_join(test %>% dplyr::select(folder,fid))
+for(i in 1:nrow(test_fields)) {
+  cat("Processing test field:", i, "/", nrow(test_fields), "ID:", test_fields$ids[i], "\n")
+  
+  # Load field raster
+  if(!file.exists(test_fields$field_path[i])) {
+    cat("WARNING: Field raster does not exist:", test_fields$field_path[i], "\n")
+    next
+  }
+  
+  f_mat <- raster(test_fields$field_path[i]) %>% as.matrix()
+  f_mat_rs <- which(rowSums(f_mat, na.rm = TRUE) > 0)
+  f_mat_cs <- which(colSums(f_mat, na.rm = TRUE) > 0)
+  
+  if(length(f_mat_rs) == 0 | length(f_mat_cs) == 0) {
+    cat("WARNING: Empty field matrix for field", test_fields$ids[i], "\n")
+    next
+  }
+  
+  f_mat <- f_mat[f_mat_rs, f_mat_cs]
+  n_pix <- length(f_mat)  # number of pixels in the field
 
+  # Initialize train_data with first band to get correct number of rows
+  first_band_file <- file.path(data.dir, image_path, paste0(image_path, "_", test_fields$ids[i]), "B01.tif")
+  if(!file.exists(first_band_file)) {
+    cat("WARNING: First band missing:", first_band_file, "\n")
+    next
+  }
+  mm <- raster(first_band_file) %>% as.matrix()
+  mm <- mm[f_mat_rs, f_mat_cs]
+  train_data <- data.frame(B01 = as.vector(mm))
 
+  # Read remaining bands
+  for(b in bands[-1]) {
+    img_file <- file.path(data.dir, image_path, paste0(image_path, "_", test_fields$ids[i]), paste0(b, ".tif"))
+    if(!file.exists(img_file)) {
+      cat("WARNING: Band file missing:", img_file, "\n")
+      train_data[[b]] <- NA  # fill missing band with NA
+      next
+    }
+    mm <- raster(img_file) %>% as.matrix()
+    mm <- mm[f_mat_rs, f_mat_cs]
+    train_data[[b]] <- as.vector(mm)
+  }
+  
+  # Flatten field mask as fid
+  fid <- as.vector(f_mat)
 
-
-# #############################################################
-# #### PREPARE FINAL DATA FOR TRAINING
-# ###############################################################
-# neighbour_data = rbind(ngb,test_ngb)
-# dr.dat = cbind(x_mean=neighbour_data$x_mean,y_mean=neighbour_data$y_mean) %>% as.data.frame()
-# transform = preProcess(dr.dat, method = c("center","scale","pca"))
-# pc = predict(transform, dr.dat) %>% as.data.frame()
-# neighbour_data$y_mean_pca = pc$PC1
-# neighbour_data$x_mean_pca = pc$PC2
-
-# ###########
-# transform = preProcess(dr.dat, method = c("center","scale"))
-# pc = predict(transform, dr.dat) %>% as.data.frame()
-# neighbour_data$y_mean_scale = pc$y_mean
-# neighbour_data$x_mean_scale = pc$x_mean
-
-# neighbour_data$lat1 = cos(neighbour_data$y_mean_scale)*cos(neighbour_data$x_mean_scale)
-# neighbour_data$lat2 = cos(neighbour_data$y_mean_scale)*sin(neighbour_data$x_mean_scale)
-# neighbour_data$lat3 = sin(neighbour_data$y_mean_scale)
-
-# neighbour_data$rot45_x = 0.707 * neighbour_data$y_mean_scale + 0.707*neighbour_data$x_mean_scale
-# neighbour_data$rot45_y = 0.707 * neighbour_data$x_mean_scale - 0.707*neighbour_data$y_mean_scale
-# neighbour_data$rot30_x = 0.866 * neighbour_data$y_mean_scale + 0.5*neighbour_data$x_mean_scale
-# neighbour_data$rot30_y = 0.866 * neighbour_data$x_mean_scale - 0.5*neighbour_data$y_mean_scale
-# neighbour_data$rot60_x = 0.5 * neighbour_data$y_mean_scale + 0.866*neighbour_data$x_mean_scale
-# neighbour_data$rot60_y = 0.5 * neighbour_data$x_mean_scale - 0.866*neighbour_data$y_mean_scale
-
-
-# neighbour_data$x_mean2 = as.numeric(deg2dms(neighbour_data$x_mean)[,2])*60
-# neighbour_data$y_mean2 = as.numeric(deg2dms(neighbour_data$y_mean)[,2])*60
-
-# neighbour_data$x_mean = NULL
-# neighbour_data$y_mean= NULL
-
-
-# ############# #####################################
-# ######  TRAIN DATA FEATURE ENGINEERING
-# ###################################################
-# df = df  %>% 
-#   mutate(
-#     ndvi =(B08 - B04)/ (B08 + B04),
-#     GLI = 	(2*B03-B04-B02)/(2*B03+B04+B02),
-#     CVI = (B08 / B03) * (B04 / B03),
-#     SIPI = (B08 - B02) / (B08 - B04),
-#     S2REP = 705 + 35 * ((((B07 + B04)/2) - B05)/(B06 - B05)),
-#     CCCI = ((B08 - B05) / (B08 + B05)) / ((B08 - B04) / (B08 + B04)),
-#     hue = atan(2*(B02-B03-B04)/30.5*(B03-B04)),
-#     RENDVI = (B06 - B05) / (B06 + B05), 
-#     RECI = (B08 / B04)-1,
-#     RECI2 = (B08 / B05)-1,
-#     evi = 2.5 * (B08 - B04) / ((B08 + 6.0 * B04 - 7.5 * B02) + 1.0),
-#     evi2 = 2.4 * (B08 - B04) / (B08 + B04 + 1.0),
-#     npcri = (B04 - B02) / (B04 + B02),
-#     ndwi = (B03 - B08) / (B03 + B08)
-#   )
-
-# ####### CALCLUATE AGGREGATE FEATURE PER FIELD ID
-# df_train = df %>% filter(!is.na(fid)) %>% 
-#   group_by(fid) %>%
-#   mutate(field_tile_count = n(), field_overlap_count = length(unique(folder))) %>%  ungroup() %>% 
-#   dplyr::select(-c(folder,id)) %>% 
-#   group_by(fid) %>% 
-#   summarise_all(list(
-#     median =median,
-#     max = max)) %>% 
-#   ungroup() %>%
-#   dplyr::select(-c(label_max,field_tile_count_max,field_overlap_count_max))
+  # Combine into final data frame for this field
+  dd <- data.frame(folder = test_fields$ids[i], fid = fid, train_data) %>% dplyr::filter(!is.na(fid))
+  cat("Rows for this field:", nrow(dd), "\n")
+  
+  # Append to cumulative test data
+  test <- dplyr::bind_rows(test, dd)
+  cat("Cumulative test rows:", nrow(test), "\n")
+  
+  # Clean up
+  rm(f_mat, fid, dd, train_data, mm, f_mat_rs, f_mat_cs); invisible(gc())
+}
 
 
-# ###### EXTARCT FEATURE ENGINEERING - JOINING WITH OTHER DATA FILES
-# df_train = df_train %>% 
-#   left_join(field_details %>% dplyr::select(-folder) %>% filter(!duplicated(fid))) %>% 
-#   left_join(neighbour_data %>% filter(!duplicated(field_ids))%>% rename(fid = field_ids)) %>% 
-#   mutate(field_tile_size = 20000*field_tile_count_median*tile_width*tile_height,
-#          fid = NULL)
+cat("=== RAW TEST DATA MATRIX CREATED ===\n")
+cat("Total test rows:", nrow(test), "Columns:", ncol(test), "\n")
+if(nrow(test) == 0) stop("ERROR: No test data generated! Cannot continue.")
 
-# label = df_train$label_median
-# df_train$label_median=NULL
-
-
-
-###############################################
-#####  TEST DATA FEATURE ENGINEERING
-###############################################
-test = test %>% 
+##########################################
+#### FEATURE ENGINEERING
+##########################################
+test <- test %>%
   mutate(
     ndvi =(B08 - B04)/ (B08 + B04),
-    GLI = 	(2*B03-B04-B02)/(2*B03+B04+B02),
+    GLI = (2*B03-B04-B02)/(2*B03+B04+B02),
     CVI = (B08 / B03) * (B04 / B03),
     SIPI = (B08 - B02) / (B08 - B04),
     S2REP = 705 + 35 * ((((B07 + B04)/2) - B05)/(B06 - B05)),
@@ -445,21 +199,55 @@ test = test %>%
     evi = 2.5 * (B08 - B04) / ((B08 + 6.0 * B04 - 7.5 * B02) + 1.0),
     evi2 = 2.4 * (B08 - B04) / (B08 + B04 + 1.0),
     npcri = (B04 - B02) / (B04 + B02),
-    ndwi = (B03 - B08) / (B03 + B08))
+    ndwi = (B03 - B08) / (B03 + B08)
+  )
 
-#################################  FINAL TEST DATA
-df_test = test %>% filter(!is.na(fid)) %>% 
+cat("Feature engineering completed. Dimensions:", dim(test), "\n")
+
+##########################################
+#### AGGREGATE PER FIELD
+##########################################
+df_test <- test %>% filter(!is.na(fid)) %>%
   group_by(fid) %>%
-  mutate(field_tile_count = n(), field_overlap_count = length(unique(folder))) %>%  ungroup() %>% 
-  dplyr::select(-c(folder,id))  %>% group_by(fid) %>% 
-  summarise_all(list(median =median,
-                     max = max)) %>%  ungroup() 
+  mutate(field_tile_count = n(), field_overlap_count = length(unique(folder))) %>%
+  ungroup() %>%
+  dplyr::select(-c(folder, id)) %>%
+  group_by(fid) %>%
+  summarise_all(list(median = median, max = max)) %>%
+  ungroup()
 
-df_test = df_test %>% 
-         left_join(test_details%>% dplyr::select(-folder) %>% filter(!duplicated(fid))) %>% 
-         mutate(field_tile_size = 20000*field_tile_count_median*tile_width*tile_height) %>% 
-          #left_join(neighbour_data %>% filter(!duplicated(field_ids))%>% rename(fid = field_ids)) 
+cat("Aggregated df_test dimensions:", dim(df_test), "\n")
 
+##########################################
+#### JOIN FIELD DETAILS (TILE SIZE)
+##########################################
+test_details <- data.frame()
+for(i in 1:nrow(test_fields)){
+  folder_name <- paste0(test_path, "_", test_fields$ids[i])
+  stac_file <- file.path(data.dir, test_path, folder_name, "stac.json")
+  if(!file.exists(stac_file)){
+    cat("WARNING: stac.json missing:", stac_file, "\n")
+    next
+  }
+  stac <- jsonlite::read_json(stac_file)
+  bbox <- unlist(stac$bbox)
+  tile_width <- bbox[3] - bbox[1]
+  tile_height <- bbox[4] - bbox[2]
+  dd <- data.frame(fid = test_fields$ids[i], tile_width = tile_width, tile_height = tile_height)
+  test_details <- rbind(test_details, dd)
+}
 
-####### WRITE OUT TRAIN/TEST DATASET to DATA FOLDER
-fwrite(df_test, file = paste0(output_path,"/Final_Test.csv"), row.names = F)
+cat("Test details loaded. Rows:", nrow(test_details), "\n")
+
+df_test <- df_test %>%
+  left_join(test_details, by = "fid") %>%
+  mutate(field_tile_size = 20000*field_tile_count_median*tile_width*tile_height)
+
+cat("Final df_test dimensions after joining details:", dim(df_test), "\n")
+
+##########################################
+#### WRITE TO CSV
+##########################################
+output_file <- file.path(output_path, "Final_Test.csv")
+fwrite(df_test, file = output_file, row.names = FALSE)
+cat("Final_Test.csv written successfully to:", output_file, "\n")
