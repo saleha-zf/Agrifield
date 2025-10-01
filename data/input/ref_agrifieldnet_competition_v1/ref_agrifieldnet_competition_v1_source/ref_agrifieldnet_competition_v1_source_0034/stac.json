@@ -1,0 +1,63 @@
+{
+  "type": "Feature",
+  "id": "source_0034",
+  "bbox": [
+    73.12948045582208,
+    33.668588991372005,
+    73.13184616417321,
+    33.67009354193235
+  ],
+  "properties": {
+    "datetime": "2025-09-25T07:43:38.125084Z"
+  },
+  "assets": {
+    "B01.tif": {
+      "href": "B01.tif",
+      "type": "image/tiff"
+    },
+    "B02.tif": {
+      "href": "B02.tif",
+      "type": "image/tiff"
+    },
+    "B03.tif": {
+      "href": "B03.tif",
+      "type": "image/tiff"
+    },
+    "B04.tif": {
+      "href": "B04.tif",
+      "type": "image/tiff"
+    },
+    "B05.tif": {
+      "href": "B05.tif",
+      "type": "image/tiff"
+    },
+    "B06.tif": {
+      "href": "B06.tif",
+      "type": "image/tiff"
+    },
+    "B07.tif": {
+      "href": "B07.tif",
+      "type": "image/tiff"
+    },
+    "B08.tif": {
+      "href": "B08.tif",
+      "type": "image/tiff"
+    },
+    "B8A.tif": {
+      "href": "B8A.tif",
+      "type": "image/tiff"
+    },
+    "B09.tif": {
+      "href": "B09.tif",
+      "type": "image/tiff"
+    },
+    "B11.tif": {
+      "href": "B11.tif",
+      "type": "image/tiff"
+    },
+    "B12.tif": {
+      "href": "B12.tif",
+      "type": "image/tiff"
+    }
+  }
+}

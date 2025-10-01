@@ -1,0 +1,22 @@
+{
+  "id": "ref_agrifieldnet_competition_v1",
+  "type": "Collection",
+  "title": "AgriFieldNet combined collection (generated)",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "data/input/ref_agrifieldnet_competition_v1/collection.json"
+    },
+    {
+      "rel": "items",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_labels_test/collection.json"
+    },
+    {
+      "rel": "items",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/collection.json"
+    }
+  ]
+}

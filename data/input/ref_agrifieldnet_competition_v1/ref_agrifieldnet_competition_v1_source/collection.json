@@ -1,0 +1,257 @@
+{
+  "id": "AgriFieldNet_Source_(generated)",
+  "type": "Collection",
+  "title": "AgriFieldNet Source (generated)",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "data/input/ref_agrifieldnet_competition_v1/ref_agrifieldnet_competition_v1_source/collection.json"
+    },
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "../"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0000/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0001/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0002/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0003/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0004/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0005/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0006/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0007/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0008/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0009/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0010/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0011/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0012/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0013/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0014/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0015/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0016/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0017/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0018/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0019/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0020/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0021/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0022/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0023/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0024/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0025/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0026/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0027/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0028/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0029/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0030/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0031/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0032/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0033/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0034/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0035/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0036/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0037/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0038/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0039/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0040/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0041/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0042/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0043/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0044/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0045/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0046/"
+    },
+    {
+      "rel": "item",
+      "type": "application/json",
+      "href": "./ref_agrifieldnet_competition_v1_source/ref_agrifieldnet_competition_v1_source_0047/"
+    }
+  ]
+}

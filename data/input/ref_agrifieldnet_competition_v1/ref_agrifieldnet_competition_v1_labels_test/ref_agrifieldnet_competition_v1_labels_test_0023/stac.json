@@ -1,0 +1,19 @@
+{
+  "type": "Feature",
+  "id": "labels_test_0023",
+  "bbox": [
+    73.12932041287594,
+    33.673061798339006,
+    73.1303932964819,
+    33.67416002108044
+  ],
+  "properties": {
+    "datetime": "2025-09-25T07:38:32.392605Z"
+  },
+  "assets": {
+    "field_ids.tif": {
+      "href": "field_ids.tif",
+      "type": "image/tiff"
+    }
+  }
+}
