@@ -1,19 +1,3 @@
-{
-  "type": "Feature",
-  "id": "labels_test_0013",
-  "bbox": [
-    73.12881775664586,
-    33.670694784461716,
-    73.12968679236668,
-    33.67179750184421
-  ],
-  "properties": {
-    "datetime": "2025-09-25T07:34:36.909885Z"
-  },
-  "assets": {
-    "field_ids.tif": {
-      "href": "field_ids.tif",
-      "type": "image/tiff"
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e5079cc7ad18f6df26e718ff53cde1ef14ebd51ef3e4989371c3c51a4f025dd4
+size 335
